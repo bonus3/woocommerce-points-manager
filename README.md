@@ -14,6 +14,8 @@ Plugin para WooCommerce que adiciona características de gerenciamento de pontos
 ## Planejamento futuro:
 - Página de extrato no front-end.
 - Cálculo e débito automático de pontos expirados.
+- Opção de compra somente com pontos.
+- Máximo de pontos que podem ser usados num pedido.
 
 
 ![WC Points](https://raw.githubusercontent.com/bonus3/woocommerce-points-manager/master/assets/img/cap-1.PNG)
