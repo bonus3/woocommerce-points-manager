@@ -82,12 +82,18 @@ class WooCommerce {
     }
     
     public function points_order_change($order_id, $status_old, $status_new, $order) {
+        global $wc_points;
         $customer = new User($order->get_customer_id());
         if (in_array($status_old, ['pending', 'processing', 'completed', 'on-hold'])
                 && in_array($status_new, ['cancelled', 'failed', 'refunded'])
                 && empty(get_post_meta($order_id, '_redeemed_points_reversal', true))) {
+            $points = $wc_points->sys->calculate_points_to_new_factor(
+                abs(get_post_meta($order_id, '_redeemed_points', true)),
+                get_post_meta($order_id, '_conversion_factor', true),
+                $customer->get_factor()
+            );
             $customer->points->insert_transaction(
-                abs(get_post_meta($order_id, '_redeemed_points', true)), 'order-reverse', $order_id, __('Points reversal', 'woocommerce-points-manager')
+                $points, 'order-reverse', $order_id, __('Points reversal', 'woocommerce-points-manager')
             );
             update_post_meta($order_id, '_redeemed_points_reversal', true);
         } else if (in_array($status_new, ['pending', 'processing', 'completed', 'on-hold'])
@@ -102,8 +108,13 @@ class WooCommerce {
                 );
                 return false;
             }
+            $points = $wc_points->sys->calculate_points_to_new_factor(
+                $points_to_redeem,
+                get_post_meta($order_id, '_conversion_factor', true),
+                $customer->get_factor()
+            );
             $customer->points->insert_transaction(
-                $points_to_redeem, 'order-resume', $order_id, __('Redeemed points', 'woocommerce-points-manager')
+                $points, 'order-resume', $order_id, __('Redeemed points', 'woocommerce-points-manager')
             );
             update_post_meta($order_id, '_redeemed_points_reversal', false);
         }

@@ -128,4 +128,8 @@ class WC_Points {
         return $min;
     }
     
+    public function calculate_points_to_new_factor($points, $current_factor, $new_factor) {
+        return $points * $new_factor / $current_factor;
+    }
+    
 }
