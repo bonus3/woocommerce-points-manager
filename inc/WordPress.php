@@ -21,6 +21,7 @@ class WordPress {
         add_action('add_meta_boxes',               [$this, 'add_meta_box']);
         add_action('init',                         [$this, 'load_textdomain']);
         add_shortcode('wc_points_user_points',     [$this, 'shortcode_user_points']);
+        add_shortcode('wc_points_user_extract',    [$this, 'shortcode_user_extract']);
         add_action('plugin_action_links_woocommerce-points-manager/woocommerce-points-manager.php', [$this, 'settings_link']);
     }
     
@@ -155,11 +156,6 @@ class WordPress {
     }
     
     public function shortcode_user_points($atts) {
-        extract([
-            'decimal_separator'  => wc_get_price_decimal_separator(),
-            'thousand_separator' => wc_get_price_thousand_separator(),
-            'decimals'           => wc_get_price_decimals()
-        ]);
         return $this->number_format($this->sys->get_current_user()->points->get_current_points())
                 . apply_filters('wc_points_label', ' PTS');
     }
@@ -209,6 +205,20 @@ class WordPress {
     
     public function load_textdomain() {
         load_plugin_textdomain( 'woocommerce-points-manager', false, WC_POINTS_FOLDER . '/languages' ); 
+    }
+    
+    public function shortcode_user_extract($atts) {
+        global $wp;
+        $limit = isset($_GET['offset']) && $_GET['offset'] <= 100 ? intval($_GET['offset']) : 5;
+        $page = isset($_GET['wcpp']) && $_GET['wcpp'] >= 1 ? intval($_GET['wcpp']) : 1;
+        $next_link = add_query_arg([
+            'wcpp' => $page + 1
+        ], home_url( $wp->request ));
+        $previous_link = add_query_arg([
+            'wcpp' => $page > 1 ? $page - 1 : $page
+        ], home_url( $wp->request ));
+        $extract = $this->sys->get_current_user()->points->extract($limit, $page)['data'];
+        include_once WC_POINTS_PATH . 'views/user-extract.php';
     }
     
 }

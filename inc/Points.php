@@ -74,11 +74,12 @@ class Points {
             . "ORDER BY id DESC LIMIT %d, %d",
             $this->user_id, $offset, $limit)
         );
-        $format_date = get_option('date_format') . ' ' . get_option('time_format');
+        //$format_date = get_option('date_format') . ' ' . get_option('time_format');
+        $format_date = get_option('date_format');
         foreach ($transactions as $key => $transaction) {
             $transactions[$key]->entryFormated = date($format_date, strtotime($transaction->entry));
             $transactions[$key]->description = $transaction->description . ' '
-                    . ($transaction->order_id ? '- Order: ' . $transaction->order_id : '');
+                    . ($transaction->order_id ? __('- Order: ', 'woocommerce-points-manager') . $transaction->order_id : '');
             $transactions[$key]->pointsFormated = $wc_points->number_format($transaction->points);
             if ($transaction->expired !== '0000-00-00 00:00:00') {
                 $transactions[$key]->expiredFormated = date($format_date, strtotime($transaction->expired));

@@ -14,9 +14,9 @@ Plugin para WooCommerce que adiciona características de gerenciamento de pontos
 - Quando o pedido tem o status alterado, os pontos são debitados ou estornados automaticamente.
 - Opção de compra somente com pontos (ignora mínimo e máximo de pontos).
 - Cálculo e débito automático de pontos expirados.
+- Página de extrato no front-end. (através de shortcode)
 
 ## Planejamento futuro:
-- Página de extrato no front-end.
 - Transferência de saldo entre usuários.
 
 
