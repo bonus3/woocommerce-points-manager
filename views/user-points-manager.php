@@ -41,7 +41,7 @@
             </div>
         </div>
         <div id="wc-points-points-adjustment">
-            <form id="wc-points-operations" action="<?php echo esc_html(admin_url('admin-ajax.php')); ?>" class="wc-points-form" method="post">
+            <form id="wc-points-operations" action="<?php echo esc_url(admin_url('admin-ajax.php')); ?>" class="wc-points-form" method="post">
                 <input type="hidden" name="action" value="wc_points_operations">
                 <input type="hidden" name="user_id" value="" id="wc-operation-user">
                 <table class="table">
