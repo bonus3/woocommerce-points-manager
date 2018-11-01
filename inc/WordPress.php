@@ -93,6 +93,7 @@ class WordPress {
                 . "`current_points` DECIMAL(10,2) NOT NULL , "
                 . "`codeword` VARCHAR(100) NOT NULL , "
                 . "`inserted_by` INT NOT NULL , "
+                . "`reference` INT NOT NULL , "
                 . "PRIMARY KEY (`id`), "
                 . "INDEX `user` (`user_id` ASC)"
             . ");";

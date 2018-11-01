@@ -136,6 +136,7 @@ class WC_Points {
     
     public function loading_current_user() {
         $this->current_user = new User();
+        $this->expired_points();
     }
     
     public function get_current_user() {
@@ -164,6 +165,15 @@ class WC_Points {
     
     public function calculate_points_to_new_factor($points, $current_factor, $new_factor) {
         return $points * $new_factor / $current_factor;
+    }
+    
+    public function expired_points() {
+        if (!is_user_logged_in()) {return;}
+        $user = $this->current_user->wp;
+        $now = date('Y-m-d');
+        if (get_user_meta($user->ID, '_check_expired_points', true) === $now) {return;}
+        $this->current_user->points->expired_points();
+        update_user_meta($user->ID, '_check_expired_points', $now);
     }
     
 }

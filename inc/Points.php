@@ -31,7 +31,7 @@ class Points {
         return $result[0]->points;
     }
     
-    public function insert_transaction($points, $codeword = '', $order_id = 0, $description = '') {
+    public function insert_transaction($points, $codeword = '', $order_id = 0, $description = '', $reference = 0) {
         global $wpdb;
         if ($points == 0) {
             return false;
@@ -47,7 +47,8 @@ class Points {
             'current_points' => $this->get_current_points() + $points,
             'codeword' => $codeword,
             'inserted_by' => get_current_user_id(),
-            'description' => $description
+            'description' => $description,
+            'reference' => $reference
         ];
         if ($points > 0 && $this->expiration > 0) {
             $data['expired'] = date('Y-m-d H:i:s', strtotime('+' . $this->expiration . ' days'));
@@ -88,6 +89,27 @@ class Points {
             'data' => $transactions
         ];
         return apply_filters('wc_points_extract', $data, $limit, $page, $this);
+    }
+    
+    public function expired_points() {
+        global $wpdb;
+        $last_credits = $wpdb->get_results(
+            $wpdb->prepare("SELECT id, points "
+                . "FROM {$wpdb->prefix}points_transaction "
+                . "WHERE user_id = %d AND points > 0 AND reference = 0 AND expired < CURRENT_DATE() "
+                . "ORDER BY entry DESC ", $this->user_id)
+        );
+        $current_points = $this->get_current_points();
+        $debit = 0;
+        foreach ($last_credits as $credit) {
+            $debit_aux = ($current_points <= $credit->points ? $current_points : $credit->points);
+            $debit += $debit_aux;
+            $current_points -= $debit_aux;
+            $wpdb->update($wpdb->prefix . 'points_transaction', ['reference' => 1], ['id' => $credit->id]);
+        }
+        if (apply_filters('wc_points_can_debit_points_expired', $debit > 0, $debit, $this, $last_credits)) {
+            $this->insert_transaction($debit * -1, 'expired', 0, __('Expired points', 'woocommerce-points-manager'));
+        }
     }
     
 }
