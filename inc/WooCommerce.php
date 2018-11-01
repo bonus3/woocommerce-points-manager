@@ -4,29 +4,43 @@ namespace WooPoints;
 
 class WooCommerce {
     
+    public $discount = 0;
+    
     public function __construct() {
         add_action('woocommerce_cart_totals_before_order_total', [$this, 'points_cart']);
         add_action('woocommerce_cart_calculate_fees',            [$this, 'aplly_points_cart']);
+        add_filter('woocommerce_cart_needs_payment',             [$this, 'disable_payment_method']);
         add_action('woocommerce_checkout_update_order_meta',     [$this, 'create_transaction']);
         add_action('woocommerce_checkout_process',               [$this, 'check_points_to_redeem']);
         add_action('woocommerce_order_status_changed',           [$this, 'points_order_change'], 10, 4);
         add_filter('woocommerce_cart_totals_order_total_html',   [$this, 'cart_total_html']);
         add_filter('wc_price',                                   [$this, 'formatting_html'], 10, 4);
         add_filter('woocommerce_get_formatted_order_total',      [$this, 'formatted_order_total'], 10, 4);
+        add_action('woocommerce_init',                           [$this, 'load_session']);
     }
     
     public function points_cart() {
-        include_once WC_POINTS_PATH . 'views/cart-points.php';
+        global $wc_points;
+        if (!$wc_points->sys->is_only_points()) {
+            include_once WC_POINTS_PATH . 'views/cart-points.php';
+        }
+    }
+    
+    public function disable_payment_method() {
+        global $wc_points;
+        return !$wc_points->sys->is_only_points();
     }
     
     public function aplly_points_cart($cart) {
         global $wc_points;
         $to_cash = 0;
-        if(!empty(WC()->session->get('wc_points_to_cash', 0))) {
-            $to_cash = WC()->session->get('wc_points_to_cash', 0);
-        }
-        if (isset($_POST['wc_points_to_cash']) && is_numeric($_POST['wc_points_to_cash'])) {
-            $to_cash = doubleval($_POST['wc_points_to_cash']);
+        $total_cart = WC()->cart->get_cart_contents_total() + WC()->cart->get_shipping_total();
+        if (!$wc_points->sys->is_only_points()) {
+            if(!empty(WC()->session->get('wc_points_to_cash', 0))) {
+                $to_cash = WC()->session->get('wc_points_to_cash', $wc_points->sys->calculate_max_points($total_cart));
+            }
+        } else {
+            $to_cash = $total_cart;
             WC()->session->set('wc_points_to_cash', $to_cash);
         }
         try {
@@ -46,19 +60,26 @@ class WooCommerce {
     public function check_points_to_redeem() {
         global $wc_points;
         $cash = WC()->cart->get_cart_contents_total() + WC()->cart->get_shipping_total();
-        $cash_minimum = round($wc_points->sys->calculate_min_points($cash), 2);
-        $to_cash = WC()->session->get('wc_points_to_cash', $cash_minimum);
+        $cash_minimum = $wc_points->sys->is_only_points() ? 0 : round($wc_points->sys->calculate_min_points($cash), 2);
+        $cash_maximum = $wc_points->sys->is_only_points() ? 0 : round($wc_points->sys->calculate_max_points($cash), 2);
+        $to_cash = $wc_points->sys->is_only_points() ? $cash : WC()->session->get('wc_points_to_cash', $cash_minimum);
         $current_points = $wc_points->sys->get_current_user()->points->get_current_points();
         $cash -= $to_cash;
         $points_to_redeem = $to_cash * $wc_points->sys->get_current_user()->get_factor();
+        
         WC()->session->set('wc_points_to_redeem', $points_to_redeem);
         if ($points_to_redeem > $current_points) {
             WC()->session->set('wc_points_to_cash', 0);
             throw new \Exception(__('Insufficient points', 'woocommerce-points-manager'));
         }
         if ($to_cash < $cash_minimum) {
-            WC()->session->set('wc_points_to_cash', 0);
-            throw new \Exception(__('Minimal of points is insufficient', 'woocommerce-points-manager'));
+            WC()->session->set('wc_points_to_cash', $cash_minimum);
+            throw new \Exception(__('Minimal of points is insufficient. Minimum required: ' . $cash_minimum, 'woocommerce-points-manager'));
+        }
+        
+        if ($cash_maximum > 0 && $to_cash > $cash_maximum) {
+            WC()->session->set('wc_points_to_cash', $cash_maximum);
+            throw new \Exception(__('Maxim of points reached. Maximum required: ' . $cash_maximum, 'woocommerce-points-manager'));
         }
         return true;
     }
@@ -123,7 +144,7 @@ class WooCommerce {
     public function cart_total_html($price) {
         global $wc_points;
         remove_filter('wc_price', [$this, 'formatting_html']);
-        $total = WC()->cart->get_total();
+        $total = $wc_points->sys->is_only_points() ? 0 : WC()->cart->get_total();
         add_filter('wc_price', [$this, 'formatting_html'], 10, 4);
         return $total;
     }
@@ -158,10 +179,17 @@ class WooCommerce {
         }
         $points_to_redeem *= get_post_meta($order->get_id(), '_conversion_factor', true);
         remove_filter('wc_price', [$this, 'formatting_html']);
-        $price = wc_price( $order->get_total(), array( 'currency' => $order->get_currency() ) );
+        $price = wc_price( $wc_points->sys->is_only_points() ? 0 : $order->get_total(), array( 'currency' => $order->get_currency() ) );
         add_filter('wc_price', [$this, 'formatting_html'], 10, 4);
         $price .= ' - ' . $wc_points->number_format(abs($points_to_redeem)) . apply_filters('wc_points_label', ' PTS');
         return $price;
+    }
+    
+    public function load_session() {
+        if (isset($_POST['wc_points_to_cash']) && is_numeric($_POST['wc_points_to_cash'])) {
+            $to_cash = doubleval($_POST['wc_points_to_cash']);
+            WC()->session->set('wc_points_to_cash', $to_cash);
+        }
     }
     
 }

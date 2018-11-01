@@ -35,12 +35,37 @@
                 <tr>
                     <th>
                         <label for="minimum-points">
-                            <?php _e('Minimum of points to use (in percent or absolute points)', 'woocommerce-points-manager'); ?><br>
+                            <?php _e('Minimum of points to use', 'woocommerce-points-manager'); ?><br>
+                            <small><?php _e('(in percent or absolute points)', 'woocommerce-points-manager'); ?></small>
+                            <br>
                         </label>
                         <small><?php _e('Ex: 99.99% or 999.99', 'woocommerce-points-manager'); ?></small>
                     </th>
                     <td>
                         <input type="text" name="minimum_points" id="minimum-points" value="<?php esc_attr_e($wc_points->sys->get_minimum_points()); ?>">
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="maximum-points">
+                            <?php _e('Maximum of points to use', 'woocommerce-points-manager'); ?><br>
+                            <small><?php _e('(in percent or absolute points. Set zero to no limit)', 'woocommerce-points-manager'); ?></small>
+                            <br>
+                        </label>
+                        <small><?php _e('Ex: 99.99% or 999.99', 'woocommerce-points-manager'); ?></small>
+                    </th>
+                    <td>
+                        <input type="text" name="maximum_points" id="maximum-points" value="<?php esc_attr_e($wc_points->sys->get_maximum_points()); ?>">
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="redemption-only-points"><?php _e('Redemption only with points', 'woocommerce-points-manager'); ?></label><br>
+                        <small><?php _e('(maximum and minimum will be ignored)', 'woocommerce-points-manager'); ?></small>
+                        <br>
+                    </th>
+                    <td>
+                        <input type="checkbox" name="redemption_only_points" value="1" id="redemption-only-points" <?php echo $wc_points->sys->is_only_points() ? 'checked' : ''; ?>>
                     </td>
                 </tr>
             </table>

@@ -8,14 +8,16 @@ Plugin para WooCommerce que adiciona características de gerenciamento de pontos
 - Exibição dos valores no front-end dos produtos, carrinho e pedido em pontos, dinheiro ou pontos e dinheiro.
 - Fator de conversão por perfil. Ou seja, valor de pontos diferenciados por perfil.
 - Mínimo de pontos que um pedido deve usar.
+- Máximo de pontos que podem ser usados num pedido.
 - No admin, pode gerenciar os pontos do usuário e consultar extrato.
 - Widget com pontos corrente do usuário logado.
+- Quando o pedido tem o status alterado, os pontos são debitados ou estornados automaticamente.
+- Opção de compra somente com pontos (ignora mínimo e máximo de pontos).
 
 ## Planejamento futuro:
 - Página de extrato no front-end.
 - Cálculo e débito automático de pontos expirados.
-- Opção de compra somente com pontos.
-- Máximo de pontos que podem ser usados num pedido.
+- Transferência de saldo entre usuários.
 
 
 ![WC Points](https://raw.githubusercontent.com/bonus3/woocommerce-points-manager/master/assets/img/cap-1.PNG)

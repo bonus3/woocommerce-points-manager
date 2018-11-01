@@ -66,14 +66,15 @@ class WordPress {
     public function public_enqueue_scripts() {
         wp_enqueue_script('wc-points-public', WC_POINTS_URI . 'assets/js/wc-points.js', ['jquery']);
         $total_cart = WC()->cart->get_cart_contents_total() + WC()->cart->get_shipping_total();
-        $min = $this->sys->calculate_min_points($total_cart);
         $data = array(
             'userPoints' => $this->sys->get_current_user()->points->get_current_points(),
             'userFactor' => $this->sys->get_current_user()->get_factor(),
             'cartSubtotalWithShipping' => $total_cart,
             'minPointsToUse' => $this->sys->get_minimum_points(false),
             'minPointsToUseIsPercent' => $this->sys->is_percent(),
-            'cartDiscount' => WC()->session->get('wc_points_to_cash', $min),
+            'maxPointsToUse' => $this->sys->get_maximum_points(false),
+            'maxPointsToUseIsPercent' => $this->sys->is_percent('maximum'),
+            'cartDiscount' =>  WC()->session->get('wc_points_to_cash', $this->sys->calculate_max_points($total_cart)),
             'ajaxUrl' => admin_url( 'admin-ajax.php' )
         );
         wp_localize_script( 'wc-points-public', 'wc_points', $data );

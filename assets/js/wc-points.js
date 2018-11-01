@@ -20,15 +20,23 @@
     });
     function updated_cart() {
         if ($('.woocommerce-cart').length) {
-            var minPointsToUse;
+            var minPointsToUse, maxPointsToUse;
             if (wc_points.minPointsToUseIsPercent == 1) {
                 minPointsToUse = wc_points.cartSubtotalWithShipping * (wc_points.minPointsToUse / 100);
             } else {
-                minPointsToUse = wc_points.cartSubtotalWithShipping - wc_points.minPointsToUse;
+                minPointsToUse = parseFloat(wc_points.minPointsToUse);
+            }
+            if (wc_points.maxPointsToUseIsPercent == 1) {
+                maxPointsToUse = wc_points.cartSubtotalWithShipping * (wc_points.maxPointsToUse / 100);
+            } else {
+                maxPointsToUse = wc_points.maxPointsToUse > 0 ? parseFloat(wc_points.maxPointsToUse) : wc_points.cartSubtotalWithShipping;
             }
             minPointsToUse = minPointsToUse.toFixed(2);
             console.log(minPointsToUse);
-            $('#wc-points-cash').attr('min', minPointsToUse).val(wc_points.cartDiscount).change(function () {
+            $('#wc-points-cash').attr({
+                min: minPointsToUse,
+                max: maxPointsToUse
+            }).val(wc_points.cartDiscount).change(function () {
                 var cash_discount = parseFloat($(this).val());
                 cash_discount = cash_discount.toFixed(2);
                 var cash = wc_points.cartSubtotalWithShipping - cash_discount;
