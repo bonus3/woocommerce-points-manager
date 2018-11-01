@@ -6,7 +6,7 @@ Plugin URI: https://github.com/bonus3/woocommerce-points-manager
 Description: WooCommerce Points Manager
 Version: 1.0.0
 Author: Anderson SG
-Author URI: https://github.com/bonus3/woocommerce-points-manager
+Author URI: https://tec.andersonsg.com.br
 Text Domain:  woocommerce-points-manager
 */
 
