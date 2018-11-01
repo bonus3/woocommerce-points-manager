@@ -35,3 +35,5 @@ Plugin para WooCommerce que adiciona características de gerenciamento de pontos
 ![WC Points](https://raw.githubusercontent.com/bonus3/woocommerce-points-manager/master/assets/img/cap-7.PNG)
 
 ![WC Points](https://raw.githubusercontent.com/bonus3/woocommerce-points-manager/master/assets/img/cap-8.PNG)
+
+![WC Points](https://raw.githubusercontent.com/bonus3/woocommerce-points-manager/master/assets/img/cap-9.PNG)
