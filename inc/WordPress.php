@@ -112,12 +112,12 @@ class WordPress {
     }
     
     public function get_user_data() {
-        $user = new User(intval($_POST['user_id']));
+        $user = new User(intval(sanitize_text_field($_POST['user_id'])) );
         if (!current_user_can('manage_options') || wp_get_current_user()->ID !== $user->wp->ID) {
             $this->response(null, __('Not authorized', 'woocommerce-points-manager'), false);
         }
-        $extract_limit = isset($_POST['extract_limit']) ? intval($_POST['extract_limit']) : 10;
-        $extract_page = isset($_POST['extract_page']) ? intval($_POST['extract_page']) : 1;
+        $extract_limit = isset(($_POST['extract_limit'])) ? intval(sanitize_text_field($_POST['extract_limit'])) : 10;
+        $extract_page = isset($_POST['extract_page']) ? intval(sanitize_text_field($_POST['extract_page'])) : 1;
         $data = [
             'id' => $user->wp->ID,
             'currentPoints' => $user->points->get_current_points(),
@@ -138,8 +138,8 @@ class WordPress {
     
     public function points_operation() {
         $user_id = $_POST['user_id'];
-        $points = wc_format_decimal($_POST['balance_adjustment']);
-        $description = isset($_POST['balance_adjustment_description']) ? $_POST['balance_adjustment_description'] : '';
+        $points = wc_format_decimal(sanitize_text_field($_POST['balance_adjustment']));
+        $description = isset($_POST['balance_adjustment_description']) ? sanitize_text_field($_POST['balance_adjustment_description']) : '';
         if (!($user_id > 0 && $points != 0)) {
             $this->response(null, __('Invalid data', 'woocommerce-points-manager'), false);
         }
@@ -209,8 +209,11 @@ class WordPress {
     
     public function shortcode_user_extract($atts) {
         global $wp;
-        $limit = isset($_GET['offset']) && $_GET['offset'] <= 100 ? intval($_GET['offset']) : 5;
-        $page = isset($_GET['wcpp']) && $_GET['wcpp'] >= 1 ? intval($_GET['wcpp']) : 1;
+
+        $offset = sanitize_text_field($_GET['offset']);
+        $wcpp = sanitize_text_field($_GET['wcpp']);
+        $limit = isset($offset) && $offset <= 100 ? intval($offset) : 5;
+        $page = isset($wcpp) && $wcpp >= 1 ? intval($wcpp) : 1;
         $next_link = add_query_arg([
             'wcpp' => $page + 1
         ], home_url( $wp->request ));

@@ -83,10 +83,10 @@
                     <td>
                         <?php $apply_factor = $wc_points->sys->get_type_apply_factor(); ?>
                         <div>
-                            <input type="radio" name="apply_factor" value="min" id="radio-apply-min-factor" <?php echo $apply_factor === 'min' ? 'checked' : ''; ?>>
+                            <input type="radio" name="apply_factor" value="min" id="radio-apply-min-factor" <?php echo esc_html($apply_factor) === 'min' ? 'checked' : ''; ?>>
                             <label for="radio-apply-min-factor"><?php _e('Minimum', 'woocommerce-points-manager'); ?></label>
 
-                            <input type="radio" name="apply_factor" value="max" id="radio-apply-max-factor" <?php echo $apply_factor !== 'min' ? 'checked' : ''; ?>>
+                            <input type="radio" name="apply_factor" value="max" id="radio-apply-max-factor" <?php echo esc_html($apply_factor) !== 'min' ? 'checked' : ''; ?>>
                             <label for="radio-apply-max-factor"><?php _e('Maximium', 'woocommerce-points-manager'); ?></label>
                         </div>
                     </td>
@@ -110,13 +110,13 @@
                     <?php foreach ($wc_points->sys->get_roles() as $role => $data) : ?>
                     <tr>
                         <th>
-                            <label for="wc-points-role-<?php echo $role; ?>"><?php echo $data['name']; ?></label>
+                            <label for="wc-points-role-<?php echo $role; ?>"><?php echo esc_html($data['name']); ?></label>
                         </th>
                         <td>
-                            <input type="text" name="wc_points_role_<?php echo $role; ?>" id="wc-points-role-<?php echo $role; ?>" value="<?php esc_attr_e($data['factor']); ?>">
+                            <input type="text" name="wc_points_role_<?php echo esc_html($role); ?>" id="wc-points-role-<?php echo esc_attr($role); ?>" value="<?php esc_attr_e($data['factor']); ?>">
                         </td>
                         <td>
-                            <input type="text" name="wc_points_expiration_<?php echo $role; ?>" id="wc-points-expiration-<?php echo $role; ?>" value="<?php esc_attr_e($data['expiration']); ?>" class="wc-points-profile-expiration">
+                            <input type="text" name="wc_points_expiration_<?php echo esc_html($role); ?>" id="wc-points-expiration-<?php echo esc_attr($role); ?>" value="<?php esc_attr_e($data['expiration']); ?>" class="wc-points-profile-expiration">
                         </td>
                     </tr>
                     <?php endforeach; ?>

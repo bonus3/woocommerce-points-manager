@@ -42,7 +42,7 @@ class Points {
         $data = [
             'user_id' => $this->user_id,
             'entry' => current_time('mysql'),
-            'order_id' => $order_id,
+            'order_id' => sanitize_sql_orderby($order_id),
             'points' => $points,
             'current_points' => $this->get_current_points() + $points,
             'codeword' => $codeword,

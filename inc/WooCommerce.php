@@ -187,7 +187,7 @@ class WooCommerce {
     
     public function load_session() {
         if (isset($_POST['wc_points_to_cash']) && is_numeric($_POST['wc_points_to_cash'])) {
-            $to_cash = doubleval($_POST['wc_points_to_cash']);
+            $to_cash = doubleval(sanitize_text_field($_POST['wc_points_to_cash']));
             WC()->session->set('wc_points_to_cash', $to_cash);
         }
     }
