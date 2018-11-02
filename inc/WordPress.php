@@ -116,7 +116,7 @@ class WordPress {
         if (!current_user_can('manage_options') || wp_get_current_user()->ID !== $user->wp->ID) {
             $this->response(null, __('Not authorized', 'woocommerce-points-manager'), false);
         }
-        $extract_limit = isset(($_POST['extract_limit'])) ? intval(sanitize_text_field($_POST['extract_limit'])) : 10;
+        $extract_limit = isset($_POST['extract_limit']) ? intval(sanitize_text_field($_POST['extract_limit'])) : 10;
         $extract_page = isset($_POST['extract_page']) ? intval(sanitize_text_field($_POST['extract_page'])) : 1;
         $data = [
             'id' => $user->wp->ID,
