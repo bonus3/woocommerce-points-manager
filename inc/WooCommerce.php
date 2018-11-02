@@ -53,20 +53,16 @@ class WooCommerce {
         }
     }
     
-    /*public function points_review_order() {
-        include_once WC_POINTS_PATH . 'views/review-order-points.php';
-    }*/
-    
     public function check_points_to_redeem() {
         global $wc_points;
+        $user_factor = $wc_points->sys->get_current_user()->get_factor();
         $cash = WC()->cart->get_cart_contents_total() + WC()->cart->get_shipping_total();
         $cash_minimum = $wc_points->sys->is_only_points() ? 0 : round($wc_points->sys->calculate_min_points($cash), 2);
         $cash_maximum = $wc_points->sys->is_only_points() ? 0 : round($wc_points->sys->calculate_max_points($cash), 2);
         $to_cash = $wc_points->sys->is_only_points() ? $cash : WC()->session->get('wc_points_to_cash', $cash_minimum);
         $current_points = $wc_points->sys->get_current_user()->points->get_current_points();
         $cash -= $to_cash;
-        $points_to_redeem = $to_cash * $wc_points->sys->get_current_user()->get_factor();
-        
+        $points_to_redeem = $to_cash * $user_factor;
         WC()->session->set('wc_points_to_redeem', $points_to_redeem);
         if ($points_to_redeem > $current_points) {
             WC()->session->set('wc_points_to_cash', 0);
@@ -74,12 +70,12 @@ class WooCommerce {
         }
         if ($to_cash < $cash_minimum) {
             WC()->session->set('wc_points_to_cash', $cash_minimum);
-            throw new \Exception(__('Minimal of points is insufficient. Minimum required: ' . $cash_minimum, 'woocommerce-points-manager'));
+            throw new \Exception(sprintf(__('Minimal of points is insufficient. Minimum required: %s', 'woocommerce-points-manager'), $wc_points->number_format($cash_minimum * $user_factor)));
         }
         
         if ($cash_maximum > 0 && $to_cash > $cash_maximum) {
             WC()->session->set('wc_points_to_cash', $cash_maximum);
-            throw new \Exception(__('Maxim of points reached. Maximum required: ' . $cash_maximum, 'woocommerce-points-manager'));
+            throw new \Exception(sprintf(__('Maxim of points reached. Maximum required: %s', 'woocommerce-points-manager'), $wc_points->numer_format($cash_maximum * $user_factor)));
         }
         return true;
     }

@@ -148,7 +148,7 @@ class WC_Points {
         if ($this->is_percent()) {
             $min = $total * ($minimum / 100);
         } else {
-            $min = $minimum;
+            $min = round($minimum / $this->get_current_user()->get_factor(), 2);
         }
         return $min;
     }
@@ -158,7 +158,7 @@ class WC_Points {
         if ($this->is_percent('maximum')) {
             $max = $total * ($maximum / 100);
         } else {
-            $max = $maximum;
+            $max = round($maximum  / $this->get_current_user()->get_factor(), 2);
         }
         return $max;
     }

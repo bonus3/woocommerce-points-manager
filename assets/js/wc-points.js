@@ -24,15 +24,19 @@
             if (wc_points.minPointsToUseIsPercent == 1) {
                 minPointsToUse = wc_points.cartSubtotalWithShipping * (wc_points.minPointsToUse / 100);
             } else {
-                minPointsToUse = parseFloat(wc_points.minPointsToUse);
+                minPointsToUse = wc_points.minPointsToUse / wc_points.userFactor;
             }
             if (wc_points.maxPointsToUseIsPercent == 1) {
                 maxPointsToUse = wc_points.cartSubtotalWithShipping * (wc_points.maxPointsToUse / 100);
             } else {
-                maxPointsToUse = wc_points.maxPointsToUse > 0 ? parseFloat(wc_points.maxPointsToUse) : wc_points.cartSubtotalWithShipping;
+                maxPointsToUse = wc_points.maxPointsToUse > 0 ? wc_points.maxPointsToUse / wc_points.userFactor : wc_points.cartSubtotalWithShipping;
+            }
+            if (wc_points.userPoints < maxPointsToUse) {
+                maxPointsToUse = wc_points.userPoints / wc_points.userFactor;
+                maxPointsToUse = maxPointsToUse.toFixed(2);
             }
             minPointsToUse = minPointsToUse.toFixed(2);
-            console.log(minPointsToUse);
+            console.log(minPointsToUse, maxPointsToUse);
             $('#wc-points-cash').attr({
                 min: minPointsToUse,
                 max: maxPointsToUse
