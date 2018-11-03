@@ -1,23 +1,27 @@
 # WooCommerce Points Manager
 
-Plugin para WooCommerce que adiciona características de gerenciamento de pontos na plataforma.
+Plugin for WooCommerce that adds point management features to the platform.
 
-## Características atuais:
+## Required
+- WooCommerce 3.x
+- PHP 5.6 or above
 
-- Aplicar descontos no pedido baseado em pontos, com total controle nas mãos do usuários em determinar quantos pontos serão resgatados.
-- Exibição dos valores no front-end dos produtos, carrinho e pedido em pontos, dinheiro ou pontos e dinheiro.
-- Fator de conversão por perfil. Ou seja, valor de pontos diferenciados por perfil.
-- Mínimo de pontos que um pedido deve usar.
-- Máximo de pontos que podem ser usados num pedido.
-- No admin, pode gerenciar os pontos do usuário e consultar extrato.
-- Widget com pontos corrente do usuário logado.
-- Quando o pedido tem o status alterado, os pontos são debitados ou estornados automaticamente (possui tratamento para caso o fator de conversão do usuário mudar).
-- Opção de compra somente com pontos (ignora mínimo e máximo de pontos).
-- Cálculo e débito automático de pontos expirados.
-- Página de extrato no front-end. (através do shortcode wc_points_user_extract)
+## Current Features:
 
-## Planejamento futuro:
-- Transferência de saldo entre usuários.
+- Apply discounts on the order based on points, with full control in the hands of the users in determining how many points will be redeemed.
+- Display of the values ​​in the front end of the products, cart and order details in points, money or points and money.
+- Conversion factor by profile. That is, value of points differentiated by profile.
+- Minimum of points that an order should use.
+- Maximum points that can be used in an order.
+- In the admin, you can manage the user's points and consult extract.
+- Widget with logged user current points.
+- When the request has status changed, the points are automatically debited or reversed (it has treatment if the user's conversion factor changes).
+- Purchase option with only points (ignores minimum and maximum points).
+- Calculation and automatic debit of expired points.
+- Extract page on the front end. (via the wc_points_user_extract shortcode)
+
+## Future planning:
+- Balance transfer between users.
 
 
 ![WC Points](https://raw.githubusercontent.com/bonus3/woocommerce-points-manager/master/assets/img/cap-1.PNG)
