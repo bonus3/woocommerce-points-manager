@@ -16,13 +16,14 @@ class WordPress {
         add_action('wp_ajax_get_user_data',        [$this, 'get_user_data']);
         add_action('wp_ajax_wc_points_operations', [$this, 'points_operation']);
         add_action('admin_menu',                   [$this, 'add_admin_menu']);
-        add_action('plugins_loaded',               [$this, 'load_wc_points']);
+        //add_action('plugins_loaded',               [$this, 'load_wc_points']);
         add_action('widgets_init',                 [$this, 'load_widgets']);
         add_action('add_meta_boxes',               [$this, 'add_meta_box']);
         add_action('init',                         [$this, 'load_textdomain']);
         add_shortcode('wc_points_user_points',     [$this, 'shortcode_user_points']);
         add_shortcode('wc_points_user_extract',    [$this, 'shortcode_user_extract']);
         add_action('plugin_action_links_woocommerce-points-manager/woocommerce-points-manager.php', [$this, 'settings_link']);
+        $this->load_wc_points();
     }
     
     public function load_wc_points() {
@@ -81,7 +82,7 @@ class WordPress {
         wp_localize_script( 'wc-points-public', 'wc_points', $data );
     }
     
-    public function create_tables() {
+    public static function create_tables() {
         global $wpdb;
         $sql = "CREATE TABLE IF NOT EXISTS `". $wpdb->prefix . "points_transaction` ("
                 . "`id` INT NOT NULL AUTO_INCREMENT , "

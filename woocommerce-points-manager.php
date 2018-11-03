@@ -38,6 +38,13 @@ spl_autoload_register(function ($class) {
 
 /** @global \WooPoints\WordPress */
 global $wc_points;
-$wc_points = new WooPoints\WordPress();
 
-register_activation_hook(__FILE__, [$wc_points, 'create_tables']);
+function wc_points_load() {
+    global $wc_points;
+    if (class_exists('WooCommerce')) {
+        $wc_points = new WooPoints\WordPress();
+    }
+}
+add_action('plugins_loaded', 'wc_points_load');
+
+register_activation_hook(__FILE__, [\WooPoints\WordPress::class, 'create_tables']);
