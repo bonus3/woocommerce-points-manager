@@ -1,23 +1,104 @@
 <?php
 
+/**
+ * WooPoints WC_Points. Enable points platform
+ * 
+ * Enable admin init
+ * 
+ * @package WooPoints
+ */
+
 namespace WooPoints;
+
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly.
+}
+
+/**
+ * WC_Points class
+ */
 
 class WC_Points {
     
+    /**
+     * If points redemption is enabled
+     * 
+     * @var boolean
+     */
     private $enabled;
+    
+    /**
+     * If points redemption is only with points
+     * 
+     * @var type 
+     */
     private $only_points;
+    
+    /**
+     * Type of products price show
+     * @var string 
+     */
     private $price_option;
+    
+    /**
+     * Minimal points or percent to order redemption
+     * 
+     * @var float 
+     */
     private $minimum_points;
+    
+    /**
+     * Maximum points or percent to order redemption
+     * 
+     * @var float 
+     */
     private $maximum_points;
+    
+    /**
+     * If minimal points is percent
+     * 
+     * @var boolean
+     */
     private $minimum_points_percent;
+    
+    /**
+     * If maximum points or percent to order redemption
+     * 
+     * @var boolean 
+     */
     private $maximum_points_percent;
+    
+    /**
+     * If user has more than one profile with different factors, get min or max factor
+     * 
+     * @var string 
+     */
     private $apply_factor;
+    
+    /**
+     * WP roles points options
+     * 
+     * @var array
+     */
     private $roles_factor = [];
-    /** @var User */
+    
+    /**
+     * User object
+     * 
+     * @var User
+     */
     private $current_user;
-    /** @var WooCommerce */
+    
+    /**
+     * WooCommerce object
+     * 
+     * @var WooCommerce
+     */
     public $woo;
     
+    /**
+     * Setup class
+     */
     public function __construct() {
         $this->enabled          = get_option('wc_points_enabled', true);
         $this->only_points      = get_option('wc_points_only_points', false);
@@ -34,38 +115,85 @@ class WC_Points {
         }
     }
     
+    /**
+     * Return if points redemption is enabled
+     * 
+     * @return boolean
+     */
     public function is_enabled() {
-        return apply_filters('wc_points_is_enabled', $this->enabled);
+        return apply_filters('wc_points_is_enabled', (bool)$this->enabled);
     }
     
+    /**
+     * Return if points redemption is only with points 
+     * 
+     * return boolean
+     */
     public function is_only_points() {
-        return apply_filters('wc_points_is_only_points', $this->only_points);
+        return apply_filters('wc_points_is_only_points', (bool)$this->only_points);
     }
     
+    /**
+     * Return WooCoomerce price option
+     * 
+     * @return string only_prices|only_points|prices_points
+     */
     public function get_price_option() {
         return apply_filters('wc_points_price_option', $this->price_option);
     }
     
+    /**
+     * Get minimum points value to redemption
+     * 
+     * @param boolean $set_percent
+     * @return string
+     */
     public function get_minimum_points($set_percent = true) {
         return apply_filters('wc_points_minimum_points', $this->minimum_points . ($this->is_percent() && $set_percent ? '%' : ''));
     }
     
+    /**
+     * Get maximum points value to redemption
+     * 
+     * @param boolean $set_percent
+     * @return string
+     */
     public function get_maximum_points($set_percent = true) {
         return apply_filters('wc_points_maximum_points', $this->maximum_points . ($this->is_percent('maximum') && $set_percent ? '%' : ''));
     }
     
+    /**
+     * Get if minimum or maximum is percent
+     * 
+     * @param string $type
+     * @return boolean
+     */
     public function is_percent($type = 'minimum') {
         return $type === 'minimum' ? $this->minimum_points_percent : $this->maximum_points_percent;
     }
     
+    /**
+     * Get apply factor type
+     * If user has more than one profile with different factors, get min or max factor
+     * 
+     * @return string
+     */
     public function get_type_apply_factor() {
         return apply_filters('wc_points_apply_factor', $this->apply_factor);
     }
     
+    /**
+     * Get wp roles config 
+     * 
+     * @return array
+     */
     public function get_roles() {
         return apply_filters('wc_points_roles', $this->roles_factor);
     }
     
+    /**
+     * load wp roles factor
+     */
     private function load_roles_factor() {
         foreach (wp_roles()->roles as $role => $data) {
             $this->roles_factor[$role] = [
@@ -76,6 +204,9 @@ class WC_Points {
         }
     }
     
+    /**
+     * Save config
+     */
     public function save_data() {
         $data = apply_filters('wc_points_config_data', [
             'enabled'           => isset($_POST['enable_points_manager']) && !empty($_POST['enable_points_manager']),
@@ -95,6 +226,12 @@ class WC_Points {
         $this->save();
     }
     
+    /**
+     * Check if value is in float or percent
+     * @param string $value
+     * @param string $type
+     * @return float
+     */
     public function percent_or_decimal($value, $type = 'minimum') {
         $percent = false;
         if (substr($value, -1) === '%') {
@@ -110,6 +247,9 @@ class WC_Points {
         return \wc_format_decimal($value, 2, true);
     }
     
+    /**
+     * Set POST values to user roles
+     */
     private function set_data_roles() {
         foreach (wp_roles()->roles as $role => $data) {
             $this->roles_factor[$role]['factor'] = wc_format_decimal($_POST['wc_points_role_' . $role], 2, true);
@@ -117,6 +257,9 @@ class WC_Points {
         }
     }
     
+    /**
+     * Save data in wp options
+     */
     private function save() {
         update_option('wc_points_enabled', intval($this->enabled), true);
         update_option('wc_points_only_points', intval($this->only_points), true);
@@ -134,15 +277,27 @@ class WC_Points {
         die();
     }
     
+    /**
+     * Load current user
+     */
     public function loading_current_user() {
         $this->current_user = new User();
         $this->expired_points();
     }
     
+    /**
+     * Get current user
+     */
     public function get_current_user() {
         return $this->current_user;
     }
     
+    /**
+     * Calculate minimun order points value
+     * 
+     * @param float $total
+     * @return float
+     */
     public function calculate_min_points($total) {
         $minimum = $this->get_minimum_points(false);
         if ($this->is_percent()) {
@@ -153,6 +308,12 @@ class WC_Points {
         return $min;
     }
     
+    /**
+     * Get maximum order ponts value
+     * 
+     * @param float $total
+     * @return float
+     */
     public function calculate_max_points($total) {
         $maximum = $this->get_maximum_points(false);
         if ($this->is_percent('maximum')) {
@@ -163,10 +324,21 @@ class WC_Points {
         return $max;
     }
     
+    /**
+     * Calculate points of new conversiona factor
+     * 
+     * @param float $points
+     * @param float $current_factor
+     * @param float $new_factor
+     * @return float
+     */
     public function calculate_points_to_new_factor($points, $current_factor, $new_factor) {
         return $points * $new_factor / $current_factor;
     }
     
+    /**
+     * Call expired points procedure
+     */
     public function expired_points() {
         if (!is_user_logged_in()) {return;}
         $user = $this->current_user->wp;

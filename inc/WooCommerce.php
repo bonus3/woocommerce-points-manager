@@ -1,11 +1,32 @@
 <?php
 
+/**
+ * WooPoints WooCommerce. Enable points platform
+ * 
+ * Enable admin init
+ * 
+ * @package WooPoints
+ */
+
 namespace WooPoints;
 
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly.
+}
+
+/**
+ * WooCommerce class
+ */
+
 class WooCommerce {
-    
+    /**
+     * @var int|float
+     */
     public $discount = 0;
     
+    /**
+     * Setup WooCommerce
+     */
     public function __construct() {
         add_action('woocommerce_cart_totals_before_order_total', [$this, 'points_cart']);
         add_action('woocommerce_cart_calculate_fees',            [$this, 'aplly_points_cart']);
@@ -19,6 +40,11 @@ class WooCommerce {
         add_action('woocommerce_init',                           [$this, 'load_session']);
     }
     
+    /**
+     * Load cart points view
+     * 
+     * @global WordPress $wc_points
+     */
     public function points_cart() {
         global $wc_points;
         if (!$wc_points->sys->is_only_points()) {
@@ -26,11 +52,23 @@ class WooCommerce {
         }
     }
     
+    /**
+     * Check if only points option is enabled
+     * 
+     * @global WordPress $wc_points
+     * @return boolean
+     */
     public function disable_payment_method() {
         global $wc_points;
         return !$wc_points->sys->is_only_points();
     }
     
+    /**
+     * Apply points in cart
+     * 
+     * @global \WooPoints\WordPress $wc_points
+     * @param \WC_Cart $cart
+     */
     public function aplly_points_cart($cart) {
         global $wc_points;
         $to_cash = 0;
@@ -53,6 +91,14 @@ class WooCommerce {
         }
     }
     
+    /**
+     *  Check user points to cart
+     * 
+     * @global \WooPoints\WordPress $wc_points
+     * @return boolean
+     * @throws \Exception If current user points, minimal points to redemption or naxim of points reached
+     * is insufficient
+     */
     public function check_points_to_redeem() {
         global $wc_points;
         $user_factor = $wc_points->sys->get_current_user()->get_factor();
@@ -80,6 +126,12 @@ class WooCommerce {
         return true;
     }
     
+    /**
+     * Insert transaction
+     * 
+     * @global \WooPoints\WordPress $wc_points
+     * @param int $order_id
+     */
     public function create_transaction($order_id) {
         global $wc_points;
         $order = wc_get_order($order_id);
@@ -98,6 +150,16 @@ class WooCommerce {
         WC()->session->set('wc_points_to_cash', 0);
     }
     
+    /**
+     * Inser transaction when order status update
+     * 
+     * @global \WooPoints\WordPress $wc_points
+     * @param int $order_id
+     * @param string $status_old
+     * @param string $status_new
+     * @param \WC_Order $order
+     * @return boolean True if success, false if contrary
+     */
     public function points_order_change($order_id, $status_old, $status_new, $order) {
         global $wc_points;
         $customer = new User($order->get_customer_id());
@@ -137,6 +199,12 @@ class WooCommerce {
         }
     }
     
+    /**
+     * 
+     * @global \WooPoints\WordPress $wc_points
+     * @param string $price
+     * @return string
+     */
     public function cart_total_html($price) {
         global $wc_points;
         remove_filter('wc_price', [$this, 'formatting_html']);
@@ -145,6 +213,15 @@ class WooCommerce {
         return $total;
     }
     
+    /**
+     * 
+     * @global \WooPoints\WordPress $wc_points
+     * @param string $return
+     * @param string $price
+     * @param array $args
+     * @param float $unformatted_price
+     * @return string
+     */
     public function formatting_html($return, $price, $args, $unformatted_price) {
         if (is_admin()) {return $return;}
         global $wc_points;
@@ -165,6 +242,15 @@ class WooCommerce {
         return $price;
     }
     
+    /**
+     * 
+     * @global \WooPoints\WordPress $wc_points
+     * @param string $formatted_total
+     * @param \WC_Order $order
+     * @param string $tax_display
+     * @param string $display_refunded
+     * @return string
+     */
     public function formatted_order_total($formatted_total, $order, $tax_display, $display_refunded) {
         global $wc_points;
         $points_to_redeem = 0;
@@ -181,6 +267,9 @@ class WooCommerce {
         return $price;
     }
     
+    /**
+     * Set post value in session
+     */
     public function load_session() {
         if (isset($_POST['wc_points_to_cash']) && is_numeric($_POST['wc_points_to_cash'])) {
             $to_cash = doubleval(sanitize_text_field($_POST['wc_points_to_cash']));

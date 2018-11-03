@@ -1,7 +1,23 @@
 <?php
 
+/**
+ * WooPoints WordPress
+ * 
+ * Enable admin init
+ * 
+ * @package WooPoints
+ */
+
 namespace WooPoints;
 use WooPoints\Widgets\Current_Points_Widget;
+
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly.
+}
+
+/**
+ * WordPress class
+ */
 
 class WordPress {
     
@@ -16,7 +32,6 @@ class WordPress {
         add_action('wp_ajax_get_user_data',        [$this, 'get_user_data']);
         add_action('wp_ajax_wc_points_operations', [$this, 'points_operation']);
         add_action('admin_menu',                   [$this, 'add_admin_menu']);
-        //add_action('plugins_loaded',               [$this, 'load_wc_points']);
         add_action('widgets_init',                 [$this, 'load_widgets']);
         add_action('add_meta_boxes',               [$this, 'add_meta_box']);
         add_action('init',                         [$this, 'load_textdomain']);
@@ -26,10 +41,20 @@ class WordPress {
         $this->load_wc_points();
     }
     
+    /**
+     * Load WC_Points class
+     */
     public function load_wc_points() {
         $this->sys = new WC_Points();
     }
     
+    /**
+     * Add link action to manager user points
+     * 
+     * @param string[] $actions
+     * @param \WP_User $user
+     * @return string[]
+     */
     public function add_row_actions($actions, \WP_User $user) {
         $actions['wc_points_user'] = 
             "<a href='#TB_inline?width=600&height=550&inlineId=wc-points-thickbox' class='wc-points-user thickbox' "
@@ -39,11 +64,19 @@ class WordPress {
         return $actions;
     }
     
+    /**
+     * Add thickbox to user admin page
+     */
     public function add_thickbox() {
         add_thickbox();
         include_once WC_POINTS_PATH . 'views/user-points-manager.php';
     }
     
+    /**
+     * Load admin scripts and css
+     * 
+     * @param string $hook
+     */
     public function admin_enqueue_scripts($hook) {
         if ($hook === 'users.php' || get_current_screen()->id === 'woocommerce_page_wc_points_menu') {
             $wp_scripts = wp_scripts();
@@ -65,6 +98,9 @@ class WordPress {
         }
     }
     
+    /**
+     * Load public scripts and css
+     */
     public function public_enqueue_scripts() {
         wp_enqueue_script('wc-points-public', WC_POINTS_URI . 'assets/js/wc-points.js', ['jquery']);
         $total_cart = WC()->cart->get_cart_contents_total() + WC()->cart->get_shipping_total();
@@ -82,6 +118,11 @@ class WordPress {
         wp_localize_script( 'wc-points-public', 'wc_points', $data );
     }
     
+    /**
+     * Create table in DB
+     * 
+     * @global \wpdb $wpdb
+     */
     public static function create_tables() {
         global $wpdb;
         $sql = "CREATE TABLE IF NOT EXISTS `". $wpdb->prefix . "points_transaction` ("
@@ -102,6 +143,13 @@ class WordPress {
         $wpdb->query($sql);
     }
     
+    /**
+     * Helper to response ajax
+     * 
+     * @param mixed $data
+     * @param string $message
+     * @param boolean $status
+     */
     public static function response($data, $message, $status = true) {
         $json = [
             'status' => $status,
@@ -112,6 +160,9 @@ class WordPress {
         die();
     }
     
+    /**
+     * Ajax get user data
+     */
     public function get_user_data() {
         $user = new User(intval(sanitize_text_field($_POST['user_id'])) );
         if (!current_user_can('manage_options') || wp_get_current_user()->ID !== $user->wp->ID) {
@@ -131,12 +182,20 @@ class WordPress {
         $this->response($data, __('User data', 'woocommerce-points-manager'));
     }
     
+    /**
+     * Add WC Points menu
+     */
     public function add_admin_menu() {
         add_submenu_page('woocommerce', 'WC Points', 'WC Points', 'manage_options', 'wc_points_menu', function () {
             include_once WC_POINTS_PATH . 'views/user-points-config.php';
         });
     }
     
+    /**
+     * Users points management
+     * 
+     * @throws \Exception If fail insert transaction
+     */
     public function points_operation() {
         $user_id = $_POST['user_id'];
         $points = wc_format_decimal(sanitize_text_field($_POST['balance_adjustment']));
@@ -156,11 +215,22 @@ class WordPress {
         }
     }
     
+    /**
+     * Shortcode current user points
+     * 
+     * @param string[] $atts
+     */
     public function shortcode_user_points($atts) {
         return $this->number_format($this->sys->get_current_user()->points->get_current_points())
                 . apply_filters('wc_points_label', ' PTS');
     }
     
+    /**
+     * Helper number format by WooCommerce
+     * 
+     * @param int|float $number
+     * @return string
+     */
     public function number_format($number) {
         extract([
             'decimal_separator'  => wc_get_price_decimal_separator(),
@@ -170,10 +240,16 @@ class WordPress {
         return number_format( $number, $decimals, $decimal_separator, $thousand_separator );
     }
     
+    /**
+     * Load Widget
+     */
     public function load_widgets() {
         register_widget(Current_Points_Widget::class);
     }
     
+    /**
+     * Add meta box to admin order, to manager order points
+     */
     public function add_meta_box() {
         add_meta_box(
             'wc-points-order-meta-box',
@@ -183,10 +259,11 @@ class WordPress {
             'side'
         );
     }
+    
     /**
-     *
+     * Load meta box content
+     * 
      * @param \WP_Post $post wp_post
-     * @return void
      */
     public function order_points_meta_box($post) {
         $order = wc_get_order($post->ID);
@@ -197,6 +274,11 @@ class WordPress {
         include_once WC_POINTS_PATH . 'views/meta-box-order-points.php';
     }
     
+    /**
+     * Add link to setting in plugin row
+     * @param string[] $links
+     * @return string[]
+     */
     public function settings_link($links) {
         $links = array_merge( array(
             '<a href="' . esc_url( admin_url( '/admin.php?page=wc_points_menu' ) ) . '">' . __('Settings') . '</a>'
@@ -204,13 +286,20 @@ class WordPress {
 	return $links;
     }
     
+    /**
+     * Load text domain
+     */
     public function load_textdomain() {
         load_plugin_textdomain( 'woocommerce-points-manager', false, WC_POINTS_FOLDER . '/languages' ); 
     }
     
+    /**
+     * 
+     * @global \WP $wp
+     * @param string[] $atts
+     */
     public function shortcode_user_extract($atts) {
         global $wp;
-
         $offset = sanitize_text_field($_GET['offset']);
         $wcpp = sanitize_text_field($_GET['wcpp']);
         $limit = isset($offset) && $offset <= 100 ? intval($offset) : 5;

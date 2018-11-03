@@ -1,27 +1,75 @@
 <?php
 
+/**
+ * WooPoints Points.
+ * 
+ * @package WooPoints
+ */
+
 namespace WooPoints;
+
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly.
+}
+
+/**
+ * Points class
+ */
 
 class Points {
     
+    /**
+     *
+     * @var int 
+     */
     private $user_id;
+    
+    /**
+     *
+     * @var int 
+     */
     private $expiration;
+    
+    /**
+     *
+     * @var float 
+     */
     private $current_points;
-
+    
+    /**
+     * Setup
+     * 
+     * @param int $user_id
+     * @param int $expiration
+     */
     public function __construct($user_id, $expiration) {
         $this->user_id = $user_id;
         $this->expiration = $expiration;
         $this->update_current_points();
     }
     
+    /**
+     * Update current user points
+     */
     public function update_current_points() {
         $this->current_points = $this->load_current_points();
     }
     
+    /**
+     * Get user points
+     * 
+     * @return float
+     */
     public function get_current_points() {
         return apply_filters('wc_points_get_current_user_points', $this->current_points, $this);
     }
     
+    /**
+     * Query to calc current user points
+     * 
+     * @global \wpdb $wpdb
+     * @return float
+     */
     private function load_current_points() {
         global $wpdb;
         
@@ -31,6 +79,17 @@ class Points {
         return $result[0]->points;
     }
     
+    /**
+     * 
+     * @global \wpdb $wpdb
+     * @param float $points
+     * @param string $codeword
+     * @param int $order_id
+     * @param string $description
+     * @param int $reference
+     * @return int Last insert id
+     * @throws \Exception Is insert table error
+     */
     public function insert_transaction($points, $codeword = '', $order_id = 0, $description = '', $reference = 0) {
         global $wpdb;
         if ($points == 0) {
@@ -62,6 +121,15 @@ class Points {
         return $wpdb->insert_id;
     }
     
+    /**
+     * Get user extrcat with pagination
+     * 
+     * @global \wpdb $wpdb
+     * @global WordPress $wc_points
+     * @param int $limit
+     * @param int $page
+     * @return array
+     */
     public function extract($limit = 10, $page = 1) {
         global $wpdb, $wc_points;
         $offset = ($page - 1) * $limit;
@@ -92,6 +160,10 @@ class Points {
         return apply_filters('wc_points_extract', $data, $limit, $page, $this);
     }
     
+    /**
+     * Calculate and debit expired points
+     * @global \wpdb $wpdb
+     */
     public function expired_points() {
         global $wpdb;
         $last_credits = $wpdb->get_results(
