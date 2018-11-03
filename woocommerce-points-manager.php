@@ -1,13 +1,15 @@
 <?php
 
-/*
-Plugin Name: WooCommerce Points Manager
-Plugin URI: https://github.com/bonus3/woocommerce-points-manager
-Description: WooCommerce Points Manager
-Version: 1.0.0
-Author: Anderson SG
-Author URI: https://tec.andersonsg.com.br
-Text Domain:  woocommerce-points-manager
+/**
+ * Plugin Name: WooCommerce Points Manager
+ * Plugin URI: https://github.com/bonus3/woocommerce-points-manager
+ * Description: WooCommerce Points Manager
+ * Version: 1.0.2
+ * Author: Anderson SG
+ * Author URI: https://tec.andersonsg.com.br
+ * Text Domain:  woocommerce-points-manager
+ * 
+ * @package WooPoints
 */
 
 if (!defined('WC_POINTS_PATH')) {

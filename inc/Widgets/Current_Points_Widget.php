@@ -1,6 +1,21 @@
 <?php
 
+/**
+ * WooPoints Widget.
+ * Widget to current user points
+ * 
+ * @package WooPoints\Widgets
+ */
+
 namespace WooPoints\Widgets;
+
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly.
+}
+
+/**
+ * Current points widget class
+ */
 
 class Current_Points_Widget extends \WP_Widget {
     /**
