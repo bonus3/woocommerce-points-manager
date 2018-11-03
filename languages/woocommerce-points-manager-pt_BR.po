@@ -3,277 +3,280 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-11-03 00:08-0300\n"
-"PO-Revision-Date: 2018-11-03 00:08-0300\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2018-11-03 00:22-0300\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: \n"
-"X-Generator: Eazy Po 0.9.5.3\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.2\n"
+"Last-Translator: \n"
+"Language: pt_BR\n"
 
 #: inc/Points.php:82
 msgid "- Order: "
-msgstr ""
+msgstr " - Pedido: "
 
 #: inc/Points.php:112
 msgid "Expired points"
-msgstr ""
+msgstr "Pontos expirados"
 
 #: inc/WooCommerce.php:48 inc/WooCommerce.php:88 inc/WooCommerce.php:172
 msgid "Discount"
-msgstr ""
+msgstr "Desconto"
 
 #: inc/WooCommerce.php:69
 msgid "Insufficient points"
-msgstr ""
+msgstr "Pontos insuficientes"
 
 #: inc/WooCommerce.php:73
 #, php-format
 msgid "Minimal of points is insufficient. Minimum required: %s"
-msgstr ""
+msgstr "Mínimo de pontos insuficiente. Mínimo requerido: %s"
 
 #: inc/WooCommerce.php:78
 #, php-format
 msgid "Maxim of points reached. Maximum required: %s"
-msgstr ""
+msgstr "Maximum de pontos atingidos. Máximo requerido: %s"
 
 #: inc/WooCommerce.php:97 inc/WooCommerce.php:134
 #: views/meta-box-order-points.php:3
 msgid "Redeemed points"
-msgstr ""
+msgstr "Pontos resgatados"
 
 #: inc/WooCommerce.php:113
 msgid "Points reversal"
-msgstr ""
+msgstr "Pontos estornados"
 
 #: inc/WooCommerce.php:123
 #, php-format
 msgid "Customer points are insufficient. Order status back to %s"
 msgstr ""
+"Pontos do cliente são insuficientes. Status do pedido de volta para %s"
 
 #: inc/WooCommerce.php:161
 msgid " or "
-msgstr ""
+msgstr " ou "
 
 #: inc/WordPress.php:37
 msgid "Points manager"
-msgstr ""
+msgstr "Gerenciamento de pontos"
 
 #: inc/WordPress.php:118 inc/WordPress.php:148
 msgid "Not authorized"
-msgstr ""
+msgstr "Não autorizado"
 
 #: inc/WordPress.php:131
 msgid "User data"
-msgstr ""
+msgstr "Dados do usuário"
 
 #: inc/WordPress.php:145
 msgid "Invalid data"
-msgstr ""
+msgstr "Dados inválidos"
 
 #: inc/WordPress.php:153
 msgid "Success"
-msgstr ""
+msgstr "Sucesso"
 
 #: inc/WordPress.php:155
 msgid "An error has occurred"
-msgstr ""
+msgstr "Um erro ocorreu"
 
 #: inc/WordPress.php:180
 msgid "Order point management"
-msgstr ""
+msgstr "Gerenciamento de pontos do pedido"
 
 #: inc/WordPress.php:202
 msgid "Settings"
-msgstr ""
+msgstr "Configurações"
 
 #: inc/Widgets/Current_Points_Widget.php:12
 #: inc/Widgets/Current_Points_Widget.php:26
 msgid "Current user points"
-msgstr ""
+msgstr "Pontos atual do usuário"
 
 #: views/cart-points.php:4
 msgid "Apply points"
-msgstr ""
+msgstr "Aplicar pontos"
 
 #: views/cart-points.php:5 views/user-extract.php:18 views/user-extract.php:38
 #: views/user-points-manager.php:21 views/user-points-manager.php:33
 #: views/user-points-manager.php:50
 msgid "Current points"
-msgstr ""
+msgstr "Pontos atuais"
 
 #: views/cart-points.php:14
 msgid "Value in points"
-msgstr ""
+msgstr "Valor em pontos"
 
 #: views/cart-points.php:17
 msgid "Cash value"
-msgstr ""
+msgstr "Valor em dinheiro"
 
 #: views/meta-box-order-points.php:7
 msgid "Points conversion factor"
-msgstr ""
+msgstr "Fator de conversão dos pontos"
 
 #: views/meta-box-order-points.php:11
 msgid "Customer current points"
-msgstr ""
+msgstr "Pontos atual do cliente"
 
 #: views/user-extract.php:5 views/user-extract.php:45
 msgid "Before"
-msgstr ""
+msgstr "Antes"
 
 #: views/user-extract.php:8 views/user-extract.php:48
 msgid "After"
-msgstr ""
+msgstr "Depois"
 
 #: views/user-extract.php:14 views/user-extract.php:34
 #: views/user-points-manager.php:17 views/user-points-manager.php:29
 #: views/user-points-manager.php:71
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #: views/user-extract.php:15 views/user-extract.php:35
 #: views/user-points-manager.php:18 views/user-points-manager.php:30
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #: views/user-extract.php:16 views/user-extract.php:36
 #: views/user-points-manager.php:19 views/user-points-manager.php:31
 msgid "Expiration"
-msgstr ""
+msgstr "Expiração"
 
 #: views/user-extract.php:17 views/user-extract.php:37
 #: views/user-points-manager.php:20 views/user-points-manager.php:32
 msgid "Points"
-msgstr ""
+msgstr "Pontos"
 
 #: views/user-points-config.php:7
 msgid "General settings"
-msgstr ""
+msgstr "Configurações gerais"
 
 #: views/user-points-config.php:11
 msgid "Enable point redemption"
-msgstr ""
+msgstr "Habilitar resgate de pontos"
 
 #: views/user-points-config.php:18
 msgid "WooCommerce price option"
-msgstr ""
+msgstr "Opções de preço do WooCommerce"
 
 #: views/user-points-config.php:23
 msgid "Show currency value"
-msgstr ""
+msgstr "Exibir valor em moeda"
 
 #: views/user-points-config.php:27
 msgid "Show points value"
-msgstr ""
+msgstr "Exibir valor em pontos"
 
 #: views/user-points-config.php:31
 msgid "Show currency and points values"
-msgstr ""
+msgstr "Exibir valor em moeda e pontos"
 
 #: views/user-points-config.php:38
 msgid "Minimum of points to use"
-msgstr ""
+msgstr "Mínimo de pontos para usar"
 
 #: views/user-points-config.php:39
 msgid "(in percent or absolute points)"
-msgstr ""
+msgstr "(em porcentagem ou pontos absolutos)"
 
 #: views/user-points-config.php:42 views/user-points-config.php:55
 #, php-format
 msgid "Ex: 99.99% or 999.99"
-msgstr ""
+msgstr "Ex: 99,99% ou 999,99"
 
 #: views/user-points-config.php:51
 msgid "Maximum of points to use"
-msgstr ""
+msgstr "Máximo de pontos para uso"
 
 #: views/user-points-config.php:52
 msgid "(in percent or absolute points. Set zero to no limit)"
 msgstr ""
+"(em porcentagem ou pontos absolutos. Coloque zero para não ter limite)"
 
 #: views/user-points-config.php:63
 msgid "Redemption only with points"
-msgstr ""
+msgstr "Resgate apenas com pontos"
 
 #: views/user-points-config.php:64
 msgid "(maximum and minimum will be ignored)"
-msgstr ""
+msgstr "(máximo e mínimo serão ignorados)"
 
 #: views/user-points-config.php:75
 msgid "Profile points factor"
-msgstr ""
+msgstr "Fator de pontos de perfil"
 
 #: views/user-points-config.php:76
 msgid ""
 "Point factor is the multiplier applied to the price when converting the "
 "value into points."
 msgstr ""
+"Fator de pontos é multiplicador aplicado ao preço quando converter o valor "
+"em pontos"
 
 #: views/user-points-config.php:80
 msgid "Apply factor"
-msgstr ""
+msgstr "Aplicar fator"
 
 #: views/user-points-config.php:81
 msgid "(if user has more than one profile with different factors)"
-msgstr ""
+msgstr "(se usuário possuir mais de um perfil com fatores diferentes)"
 
 #: views/user-points-config.php:87
 msgid "Minimum"
-msgstr ""
+msgstr "Mínimo"
 
 #: views/user-points-config.php:90
 msgid "Maximium"
-msgstr ""
+msgstr "Máximo"
 
 #: views/user-points-config.php:98
 msgid "Profile"
-msgstr ""
+msgstr "Perfil"
 
 #: views/user-points-config.php:100
 msgid "Points factor"
-msgstr ""
+msgstr "Fator de pontos"
 
 #: views/user-points-config.php:101
 msgid "Ex: 999.9999"
-msgstr ""
+msgstr "Ex:999,999"
 
 #: views/user-points-config.php:104
 msgid "Points expiration"
-msgstr ""
+msgstr "Expiração de pontos"
 
 #: views/user-points-config.php:105
 msgid "Ex: In days"
-msgstr ""
+msgstr "Em dias"
 
 #: views/user-points-manager.php:2
 msgid "Loading..."
-msgstr ""
+msgstr "Carregando..."
 
 #: views/user-points-manager.php:5
 msgid "Point extract"
-msgstr ""
+msgstr "Extrato de pontos"
 
 #: views/user-points-manager.php:6
 msgid "Operations"
-msgstr ""
+msgstr "Operações"
 
 #: views/user-points-manager.php:56
 msgid "Conversion factor"
-msgstr ""
+msgstr "Fator de conversão"
 
 #: views/user-points-manager.php:62
 msgid "Balance adjustment"
-msgstr ""
+msgstr "Ajuste de saldo"
 
 #: views/user-points-manager.php:66
 msgid "Positive or negative values"
-msgstr ""
+msgstr "Valores positivos ou negativos"
